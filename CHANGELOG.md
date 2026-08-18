@@ -5,6 +5,16 @@ All notable changes to `@arraypress/llms-txt-astro` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — Unreleased
+
+### Added
+
+- Re-exported the core's surface — `build`, `llmsTxtResponse`, `parse` and the
+  `BuildOptions` / `LlmsTxtSection` / `LlmsTxtLink` / `LlmsTxtItem` /
+  `LlmsTxtApi` / `ParsedLlmsTxt` types. A site that assembles its llms.txt
+  outside `llmsTxtRoute()` no longer needs a second dependency on
+  `@arraypress/llms-txt`.
+
 ## [1.0.0] — 2026-08-02
 
 ### Added

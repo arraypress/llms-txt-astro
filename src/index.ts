@@ -77,3 +77,20 @@ export function llmsTxtRoute(options: LlmsTxtRouteOptions): APIRoute {
 }
 
 export default llmsTxtRoute;
+
+/*
+ * The core's surface, re-exported so an Astro project needs only this package.
+ * `llmsTxtRoute()` covers the common case, but a site that assembles its
+ * llms.txt some other way — a custom Response, a build script, or parsing one
+ * back — still reaches for `build()`, `llmsTxtResponse()` and `parse()`.
+ * Without these it would need a second dependency on @arraypress/llms-txt.
+ */
+export { build, llmsTxtResponse, parse } from '@arraypress/llms-txt';
+export type {
+	BuildOptions,
+	LlmsTxtApi,
+	LlmsTxtItem,
+	LlmsTxtLink,
+	LlmsTxtSection,
+	ParsedLlmsTxt,
+} from '@arraypress/llms-txt';

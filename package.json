@@ -1,6 +1,6 @@
 {
   "name": "@arraypress/llms-txt-astro",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Idiomatic /llms.txt route for Astro — resolves the site origin and serves the file. A thin wrapper over @arraypress/llms-txt.",
   "type": "module",
   "files": [
