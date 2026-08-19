@@ -2,7 +2,7 @@
  * @module @arraypress/llms-txt-astro/types
  */
 import type { APIContext } from 'astro';
-import type { BuildOptions } from '@arraypress/llms-txt';
+import type { BuildOptions } from './core.js';
 
 /**
  * The resolved site origin, with no trailing slash — e.g. `https://example.com`.

@@ -23,7 +23,7 @@
  * ```
  */
 
-import { build, llmsTxtResponse } from '@arraypress/llms-txt';
+import { build, llmsTxtResponse } from './core.js';
 import type { APIContext, APIRoute } from 'astro';
 import type { LlmsTxtRouteOptions, Origin } from './types';
 
@@ -85,7 +85,7 @@ export default llmsTxtRoute;
  * back — still reaches for `build()`, `llmsTxtResponse()` and `parse()`.
  * Without these it would need a second dependency on @arraypress/llms-txt.
  */
-export { build, llmsTxtResponse, parse } from '@arraypress/llms-txt';
+export { build, llmsTxtResponse, parse } from './core.js';
 export type {
 	BuildOptions,
 	LlmsTxtApi,
@@ -93,4 +93,4 @@ export type {
 	LlmsTxtLink,
 	LlmsTxtSection,
 	ParsedLlmsTxt,
-} from '@arraypress/llms-txt';
+} from './core.js';

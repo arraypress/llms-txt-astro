@@ -1,7 +1,7 @@
 {
   "name": "@arraypress/llms-txt-astro",
-  "version": "1.1.0",
-  "description": "Idiomatic /llms.txt route for Astro — resolves the site origin and serves the file. A thin wrapper over @arraypress/llms-txt.",
+  "version": "2.0.0",
+  "description": "/llms.txt for Astro \u2014 an idiomatic route helper plus the builder behind it. Generates and parses the llms.txt AI-discovery format. Zero dependencies.",
   "type": "module",
   "files": [
     "src/",
@@ -18,7 +18,11 @@
       "types": "./src/types.ts",
       "default": "./src/types.ts"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./core": {
+      "types": "./src/core.d.ts",
+      "default": "./src/core.js"
+    }
   },
   "keywords": [
     "astro",
@@ -42,9 +46,6 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "@arraypress/llms-txt": "^1.0.0"
   },
   "peerDependencies": {
     "astro": "^6.0.0 || ^7.0.0"
