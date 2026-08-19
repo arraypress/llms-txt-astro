@@ -1,6 +1,6 @@
 # @arraypress/llms-txt-astro
 
-An idiomatic `/llms.txt` route for Astro — a thin wrapper over [`@arraypress/llms-txt`](https://www.npmjs.com/package/@arraypress/llms-txt)'s `build()`. Same options, returned as a `Response`, with the site origin resolved for you.
+An idiomatic `/llms.txt` route for Astro, plus the `build()` generator behind it. Returns a `Response`, with the site origin resolved for you.
 
 ## Install
 
