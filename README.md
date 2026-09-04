@@ -46,6 +46,56 @@ Returns an Astro `APIRoute` serving `text/plain`.
 
 The resolved origin, no trailing slash. Prefers Astro's configured `site`; falls back to the request URL's origin when `site` is unset, so `astro dev` emits usable links instead of `undefined/…`. Exported because a page occasionally needs the same value.
 
+## Content collections
+
+`collectionSection()` turns a collection into a section of links, and
+`collectionDocuments()` turns it into full-text documents. Both take the
+entries — you call `getCollection` yourself, because `astro:content` is a
+virtual module this package can't import without breaking its own build.
+
+```ts
+// src/pages/llms.txt.ts
+import { llmsTxtRoute, collectionSection } from '@arraypress/llms-txt-astro';
+import { getCollection } from 'astro:content';
+
+export const GET = llmsTxtRoute(async (origin) => ({
+  name: 'Acme',
+  description: 'One line about Acme.',
+  sections: [
+    collectionSection(await getCollection('docs'), { title: 'Docs', origin, base: '/docs' }),
+  ],
+}));
+```
+
+Drafts (`data.draft === true`) are dropped, entries sort by `data.order` then
+title, and URLs lose their file extension and any trailing `/index`. Pass
+`filter`, `sort`, or a `link` / `document` override to change any of it — the
+override receives the computed default, so you can spread it and adjust one
+field.
+
+## /llms-full.txt
+
+`llms.txt` is an index — an agent still has to fetch every link. `llms-full.txt`
+is the corpus, and both are worth publishing:
+
+```ts
+// src/pages/llms-full.txt.ts
+import { llmsFullTxtRoute, collectionDocuments } from '@arraypress/llms-txt-astro';
+import { getCollection } from 'astro:content';
+
+export const GET = llmsFullTxtRoute(async (origin) => ({
+  name: 'Acme',
+  documents: collectionDocuments(await getCollection('docs'), { origin, base: '/docs' }),
+}));
+```
+
+**On the format:** [llmstxt.org](https://llmstxt.org) specifies `llms.txt` and
+says nothing about `llms-full.txt` — the name is a de-facto convention from
+documentation platforms. This package follows it (llms.txt's header, then each
+document under its own H1 with a `Source:` line, separated by `---`), but
+there's no standard to conform to, and the tests are honest about that. The
+`llms.txt` output *is* checked against the real spec.
+
 ## Why a separate package?
 
 `@arraypress/llms-txt` is zero-dependency and runs anywhere. This package adds the two things every Astro site otherwise reimplements — resolving `Astro.site` down to a bare origin, and wrapping the result in a `Response` — without pulling Astro into the core library.

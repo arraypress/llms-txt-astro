@@ -10,3 +10,7 @@ export function llmsTxtResponse(content: string): Response;
 export interface ParsedLlmsTxt { name: string; description: string; sections: Array<{ title: string; items: Array<{ name: string; fields: Record<string, string> }>; }>; }
 /** Parse an existing llms.txt string into structured data. */
 export function parse(text: string): ParsedLlmsTxt;
+export interface LlmsFullDocument { title?: string; url?: string; description?: string; content?: string; }
+export interface BuildFullOptions { name?: string; description?: string; meta?: Record<string, string>; documents?: LlmsFullDocument[]; }
+/** Build an llms-full.txt string — the full-text companion to llms.txt. */
+export function buildFull(options?: BuildFullOptions): string;

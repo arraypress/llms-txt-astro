@@ -18,7 +18,7 @@
  * @param {Object} [options={}] - Configuration for the llms.txt file.
  * @param {string} [options.name] - Site or project name (rendered as `# heading`).
  * @param {string} [options.description] - One-line description (rendered as `> blockquote`).
- * @param {Object<string, string>} [options.meta={}] - Key-value metadata pairs (rendered under "## Information").
+ * @param {Object<string, string>} [options.meta={}] - Key-value metadata pairs, rendered as a plain list under the summary (no heading — the spec forbids one there).
  * @param {Array<Object>} [options.sections=[]] - Content sections.
  * @param {string} options.sections[].title - Section heading.
  * @param {string} [options.sections[].description] - Section description paragraph.
@@ -58,8 +58,12 @@ export function build(options = {}) {
   const lines = [];
   if (name) lines.push("# " + name);
   if (description) lines.push("", "> " + description);
+  // Metadata goes in the spec's rule-4 space — free-form markdown between the
+  // summary and the file lists, headings not allowed. It was previously emitted
+  // under an `## Information` heading, which made it an H2 section whose items
+  // carry no hyperlink, and rule 5 requires one in every file-list item.
   if (Object.keys(meta).length > 0) {
-    lines.push("", "## Information", "");
+    lines.push("");
     for (const [key, value] of Object.entries(meta)) lines.push("- " + key + ": " + value);
   }
   for (const section of sections) {
@@ -79,7 +83,13 @@ export function build(options = {}) {
   }
   if (apis.length > 0) {
     lines.push("", "## API Access", "");
-    for (const api of apis) lines.push("- " + (api.description || api.method + " " + api.url) + ": " + (api.method ? api.method + " " : "") + api.url);
+    for (const api of apis) {
+      // Rule 5 again: the item must be a hyperlink. The method is the note
+      // after the colon, which is what the `:` in the spec is for.
+      const label = api.description || (api.method ? api.method + " " + api.url : api.url);
+      const note = api.description && api.method ? ": " + api.method : "";
+      lines.push("- [" + label + "](" + api.url + ")" + note);
+    }
   }
   return lines.join("\n");
 }
@@ -126,4 +136,65 @@ export function parse(text) {
     else if (line.startsWith("- ") && currentItem) { const content = line.slice(2); const colonIdx = content.indexOf(": "); if (colonIdx > 0) currentItem.fields[content.slice(0, colonIdx)] = content.slice(colonIdx + 2); }
   }
   return { name, description, sections };
+}
+
+/**
+ * Build an `llms-full.txt` file — the full-text companion to `llms.txt`.
+ *
+ * `llms.txt` is an index: names, one-line descriptions and links an agent must
+ * then go and fetch. `llms-full.txt` is the corpus — every document inlined, so
+ * a model has the whole site in one request. Sites publish both; they answer
+ * different questions.
+ *
+ * Shares the header shape with {@link build} (name, description, metadata), then
+ * emits each document separated by a horizontal rule.
+ *
+ * @param {Object} [options={}] - Configuration.
+ * @param {string} [options.name] - Site or project name (rendered as `# heading`).
+ * @param {string} [options.description] - One-line description (rendered as `> blockquote`).
+ * @param {Object<string, string>} [options.meta={}] - Key-value metadata (rendered under "## Information").
+ * @param {Array<Object>} [options.documents=[]] - The documents, in order.
+ * @param {string} options.documents[].title - Document title (rendered as `# heading`).
+ * @param {string} [options.documents[].url] - Canonical URL, emitted as a `Source:` line.
+ * @param {string} [options.documents[].description] - One-line summary, above the body.
+ * @param {string} [options.documents[].content] - The document body, verbatim.
+ * @returns {string} The llms-full.txt content, newline-terminated.
+ *
+ * @example
+ * const txt = buildFull({
+ *   name: 'Acme Docs',
+ *   description: 'Everything about Acme.',
+ *   documents: [
+ *     { title: 'Getting started', url: 'https://acme.com/docs/start', content: '## Install\n\nnpm i acme' },
+ *   ],
+ * });
+ */
+export function buildFull(options = {}) {
+  const { name, description, meta = {}, documents = [] } = options;
+
+  const head = [];
+  if (name) head.push("# " + name);
+  if (description) head.push("", "> " + description);
+  if (Object.keys(meta).length > 0) {
+    head.push("", "## Information", "");
+    for (const [key, value] of Object.entries(meta)) head.push("- " + key + ": " + value);
+  }
+
+  const blocks = [];
+  for (const doc of documents) {
+    if (!doc) continue;
+    const block = [];
+    if (doc.title) block.push("# " + doc.title);
+    // The source URL earns its place: a model quoting this corpus can cite the
+    // page it came from rather than the aggregate file.
+    if (doc.url) block.push("", "Source: " + doc.url);
+    if (doc.description) block.push("", doc.description);
+    if (doc.content) block.push("", String(doc.content).trim());
+    if (block.length) blocks.push(block.join("\n"));
+  }
+
+  const parts = [];
+  if (head.length) parts.push(head.join("\n"));
+  parts.push(...blocks);
+  return parts.join("\n\n---\n\n") + "\n";
 }

@@ -1,7 +1,7 @@
 {
   "name": "@arraypress/llms-txt-astro",
-  "version": "2.0.0",
-  "description": "/llms.txt for Astro \u2014 an idiomatic route helper plus the builder behind it. Generates and parses the llms.txt AI-discovery format. Zero dependencies.",
+  "version": "2.1.0",
+  "description": "/llms.txt for Astro \u2014 an idiomatic route helper plus the builder behind it. Generates and parses the llms.txt AI-discovery format, with an llms-full.txt route and content-collection helpers. Zero dependencies.",
   "type": "module",
   "files": [
     "src/",
