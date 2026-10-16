@@ -5,6 +5,20 @@ All notable changes to `@arraypress/llms-txt-astro` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] — Unreleased
+
+### Deprecated
+
+- **This package is now part of `@arraypress/seo-astro`.** Its `seo()`
+  integration writes `/llms.txt` — from the config, or from the built pages
+  with nothing to configure — along with OG cards, security headers and the
+  audit, so an Astro site adds one integration instead of several. Every
+  named export here is at `@arraypress/seo-astro/llms`, unchanged, and the
+  builders at `@arraypress/seo-astro/llms/core`. Swap the import; nothing else
+  moves. (The default export, `llmsTxtRoute`, is named-only there.)
+
+  No code changes in this release, and none to follow.
+
 ## [2.1.0] — Unreleased
 
 ### Added

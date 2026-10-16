@@ -1,5 +1,19 @@
 # @arraypress/llms-txt-astro
 
+> **Deprecated.** This package is now part of
+> [`@arraypress/seo-astro`](https://www.npmjs.com/package/@arraypress/seo-astro).
+> Its `seo()` integration writes `/llms.txt` from your config or your built
+> pages, alongside OG cards, security headers and an SEO audit. The route
+> helpers below live on, unchanged, at `@arraypress/seo-astro/llms` (named
+> imports only; the default export is gone):
+>
+> ```diff
+> - import { llmsTxtRoute, collectionSection } from '@arraypress/llms-txt-astro';
+> + import { llmsTxtRoute, collectionSection } from '@arraypress/seo-astro/llms';
+> ```
+>
+> This release changes nothing else, and there won't be another.
+
 An idiomatic `/llms.txt` route for Astro, plus the `build()` generator behind it. Returns a `Response`, with the site origin resolved for you.
 
 ## Install
@@ -40,7 +54,7 @@ export const GET = llmsTxtRoute({ name: 'My Site', description: 'One line.' });
 
 Returns an Astro `APIRoute` serving `text/plain`.
 
-`options` is either a [`build()`](https://www.npmjs.com/package/@arraypress/llms-txt) options object, or a factory `(origin, context) => options` — sync or async. The factory form is the usual one, since the spec wants absolute URLs and the origin isn't known until the request.
+`options` is either a `build()` options object, or a factory `(origin, context) => options` — sync or async. The factory form is the usual one, since the spec wants absolute URLs and the origin isn't known until the request.
 
 ### `originOf(context)`
 
@@ -96,10 +110,6 @@ document under its own H1 with a `Source:` line, separated by `---`), but
 there's no standard to conform to, and the tests are honest about that. The
 `llms.txt` output *is* checked against the real spec.
 
-## Why a separate package?
+## Licence
 
-`@arraypress/llms-txt` is zero-dependency and runs anywhere. This package adds the two things every Astro site otherwise reimplements — resolving `Astro.site` down to a bare origin, and wrapping the result in a `Response` — without pulling Astro into the core library.
-
-## License
-
-MIT
+MIT © ArrayPress Limited
